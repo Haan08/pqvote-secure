@@ -48,7 +48,8 @@ function decrypt(encryptedText, keyHex) {
 // ✅ MySQL Connection
 
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
+  connectionLimit: 5,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
@@ -57,13 +58,9 @@ const db = mysql.createConnection({
 });
 
 
-
-db.connect(err => {
-  if (err) {
-    throw err;
-  } else {
-    console.log("✅ Connected to MySQL");
-  }
+db.query('SELECT 1', (err) => {
+  if (err) console.error("❌ DB connection failed:", err);
+  else console.log("✅ Connected to MySQL with Pool");
 });
 
  
